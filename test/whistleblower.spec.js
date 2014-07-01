@@ -64,5 +64,81 @@ describe("Interface tests: Is conforming to CommonJS", function(){
 
 });
 
-describe("Allows for many blowers/loggers to register", function(){
+describe("Allows for many blowers/loggers to register and listen events", function(){
+    var spyBlower = new wb.Blower();
+    spyBlower.blow = jasmine.createSpy("blow");
+
+    it("spyBlower must not get any event before being registered", function(){
+        wb.log("Test log");
+       expect(spyBlower.blow).not.toHaveBeenCalled();
+
+    });
+
+    it("must allow to register spyBlower",function(){
+        expect(spyBlower.register()>0).toBe(true);
+    });
+
+    it("must redirect log events to any registered blower", function(){
+        wb.log("Test log");
+        expect(spyBlower.blow).toHaveBeenCalled();
+    });
 });
+
+describe("Allows to set masks to filter output levels", function(){
+
+    it("Has INFO level enabled by default", function(){
+        expect((wb.outputMask & wb.INFO_MASK) !== 0).toBe(true);
+    });
+
+    it("Can disable INFO level", function(){
+        wb.removeMask(wb.INFO_MASK);
+        expect((wb.outputMask & wb.INFO_MASK) !== 0).toBe(false);
+    });
+
+    it("Can enable INFO level", function(){
+        wb.addMask(wb.INFO_MASK);
+        expect((wb.outputMask & wb.INFO_MASK) !== 0).toBe(true);
+    });
+
+    it("Has WARN level enabled by default", function(){
+        expect((wb.outputMask & wb.WARN_MASK) !== 0).toBe(true);
+    });
+
+    it("Can disable WARN level", function(){
+        wb.removeMask(wb.WARN_MASK);
+        expect((wb.outputMask & wb.WARN_MASK) !== 0).toBe(false);
+    });
+
+    it("Can enable WARN level", function(){
+        wb.addMask(wb.WARN_MASK);
+        expect((wb.outputMask & wb.WARN_MASK) !== 0).toBe(true);
+    });
+
+    it("Has ERROR level enabled by default", function(){
+        expect((wb.outputMask & wb.ERROR_MASK) !== 0).toBe(true);
+    });
+
+    it("Can disable ERROR level", function(){
+        wb.removeMask(wb.ERROR_MASK);
+        expect((wb.outputMask & wb.ERROR_MASK) !== 0).toBe(false);
+    });
+
+    it("Can enable ERROR level", function(){
+        wb.addMask(wb.ERROR_MASK);
+        expect((wb.outputMask & wb.ERROR_MASK) !== 0).toBe(true);
+    });
+
+    it("Has TRACE level enabled by default", function(){
+        expect((wb.outputMask & wb.TRACE_MASK) !== 0).toBe(true);
+    });
+
+    it("Can disable TRACE level", function(){
+        wb.removeMask(wb.TRACE_MASK);
+        expect((wb.outputMask & wb.TRACE_MASK) !== 0).toBe(false);
+    });
+
+    it("Can enable TRACE level", function(){
+        wb.addMask(wb.TRACE_MASK);
+        expect((wb.outputMask & wb.TRACE_MASK) !== 0).toBe(true);
+    });
+})

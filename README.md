@@ -1,4 +1,4 @@
 whistleblower
 =============
 
-console replacement wit extra logging stuff
+Console replacement with extra logging stuff

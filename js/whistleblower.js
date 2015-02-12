@@ -32,25 +32,25 @@ wb.log = function log(){
     if(wb.outputMask & wb.INFO_MASK){
         // var formatedText = ["WB" +  Array.prototype.slice.call(arguments).join("")];
         //console.log.apply(console, formatedText);
-        _whistle(new LogObject("LOG", undefined, Array.prototype.slice.call(arguments)));
+        _whistle(new LogObject("LOG", arguments., undefined, Array.prototype.slice.call(arguments)));
     }
 };
 
 wb.warn = function warn(){
     if(wb.outputMask & wb.WARN_MASK){
-        _whistle(new LogObject("WARN", undefined, Array.prototype.slice.call(arguments), new Error()));
+        _whistle(new LogObject("WARN", undefined, undefined, Array.prototype.slice.call(arguments), new Error()));
     }
 };
 
 wb.error = function error(){
     if(wb.outputMask & wb.ERROR_MASK){
-        _whistle(new LogObject("ERROR", undefined, Array.prototype.slice.call(arguments), new Error()));
+        _whistle(new LogObject("ERROR", undefined, undefined, Array.prototype.slice.call(arguments), new Error()));
     }
 };
 
 wb.dir = function dir(element){
     if(wb.outputMask & wb.INFO_MASK){
-        _whistle(new LogObject("DIR", undefined, element));
+        _whistle(new LogObject("DIR", undefined, undefined, element));
     }
 };
 
@@ -66,7 +66,7 @@ wb.debug = function debug(){
 wb.assert = function assert(exp, msg){
     if(wb.outputMask & wb.INFO_MASK){
         if(!exp){
-            _whistle(new LogObject("ASSERT", undefined, msg || "Assertion Failure"));
+            _whistle(new LogObject("ASSERT", undefined, undefined, msg || "Assertion Failure"));
         }
     }
 };
@@ -99,7 +99,7 @@ wb.timeEnd = function timeEnd(timerId){
         if(start === undefined){
             throw "No timer " + timerId + " exists.";
         }
-        _whistle(new LogObject("TIMER", undefined, {id : timerId, time : end - start}));
+        _whistle(new LogObject("TIMER", undefined, undefined, {id : timerId, time : end - start}));
 
         if(--activeTimers<1) { //Don't like delete
             TIMERS = {};
@@ -121,16 +121,18 @@ wb.removeMask = function removeMask(mask){
     return this.outputMask;
 }
 
-function LogObject(level, app, data, trace){
+function LogObject(level, file, logStack, data, trace){
     this.level = level;
-    this.app = app;
+    this.file = file;
+    this.logStack = logStack;
     this.logData = data;
     this.trace = trace;
     this.time = Date.now();
 }
 
 function Blower(){
-    this.blow = function(data){};
+    this.blow = function(data){
+    };
     this.register = function(){
         listeners[listeners.length] = this;
         return listeners.length;
